@@ -1,0 +1,43 @@
+import uuid
+from datetime import datetime
+from sqlalchemy import Column, String, Text, Integer, DateTime, JSON
+from sqlalchemy.dialects.postgresql import UUID
+from sqlalchemy import ForeignKey
+
+from app.core.database import Base
+
+
+class User(Base):
+    __tablename__ = "users"
+
+    id = Column(String, primary_key=True)
+    email = Column(String, unique=True, index=True, nullable=False)
+    hashed_password = Column(String, nullable=False)
+    created_at = Column(DateTime, default=datetime.utcnow)
+    
+class CandidateProfile(Base):
+    __tablename__ = "candidate_profiles"
+
+    id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    user_id = Column(String, ForeignKey("users.id"), nullable=False, unique=True, index=True)
+
+    basics = Column(JSON, nullable=False)
+    skills = Column(JSON, nullable=False, default=list)
+    experience = Column(JSON, nullable=False, default=list)
+    education = Column(JSON, nullable=False, default=list)
+    projects = Column(JSON, nullable=False, default=list)
+    raw_text = Column(Text, nullable=False)
+
+    verification_flags = Column(JSON, nullable=False, default=list)
+    flagged_count = Column(Integer, nullable=False, default=0)
+
+    created_at = Column(DateTime, default=datetime.utcnow)
+    updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+
+
+class SearchTermCache(Base):
+    __tablename__ = "search_term_cache"
+
+    role = Column(String, primary_key=True)
+    expanded_terms = Column(JSON, nullable=False)
+    cached_at = Column(DateTime, default=datetime.utcnow)
