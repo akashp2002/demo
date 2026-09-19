@@ -29,7 +29,7 @@ RULES:
 """
 
 
-def clean_text(raw_text: str) -> str:
+def process_text(raw_text: str) -> str:
     """Light preprocessing before LLM parsing."""
     text = re.sub(r'\n{3,}', '\n\n', raw_text)      # collapse excess blank lines
     text = re.sub(r'[ \t]{2,}', ' ', text)            # collapse repeated spaces/tabs
@@ -39,7 +39,7 @@ def clean_text(raw_text: str) -> str:
 
 @traceable(name="resume_parse_llm_call")
 def parse_resume_text(raw_text: str, max_retries: int = 2) -> ParsedResume:
-    cleaned = clean_text(raw_text)
+    cleaned = process_text(raw_text)
 
     last_error = None
     for attempt in range(max_retries + 1):
