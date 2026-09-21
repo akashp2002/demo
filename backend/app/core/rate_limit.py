@@ -6,7 +6,7 @@ from fastapi import Request
 import os
 from jose import jwt, JWTError
 
-def get_user_id_or_ip(request: Request) -> str:
+def get_rate_limit_key(request: Request) -> str:
     """
     Custom key function for rate limiting.
     Uses the authenticated user ID if a valid JWT is present,
@@ -28,4 +28,4 @@ def get_user_id_or_ip(request: Request) -> str:
     # Fallback to IP address for unauthenticated requests
     return get_remote_address(request)
 
-limiter = Limiter(key_func=get_user_id_or_ip)
+limiter = Limiter(key_func=get_rate_limit_key)
