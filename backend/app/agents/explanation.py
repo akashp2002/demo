@@ -1,6 +1,6 @@
 import asyncio
 from app.agents.state import GraphState
-from app.core.explainer import generate_explanation
+from app.core.explainer import explain_job_match
 
 TOP_N_TO_EXPLAIN = 5
 MAX_CONCURRENT_EXPLANATIONS = 2
@@ -37,7 +37,7 @@ async def explanation_node(state: GraphState) -> GraphState:
 
     async def explain_with_limit(job: dict):
         async with semaphore:
-            return await asyncio.to_thread(generate_explanation, candidate_summary, job)
+            return await asyncio.to_thread(explain_job_match, candidate_summary, job)
 
     results = await asyncio.gather(
         *(explain_with_limit(job) for job in top_jobs),

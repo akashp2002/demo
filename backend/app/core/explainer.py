@@ -23,7 +23,7 @@ RULES:
 """
 
 @traceable(name="explanation_llm_call")
-def generate_explanation(candidate_summary: str, job: dict) -> str:
+def explain_job_match(candidate_summary: str, job: dict) -> str:
     breakdown = job.get("score_breakdown", {})
 
     context = f"""
