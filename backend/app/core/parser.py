@@ -5,7 +5,7 @@ from groq import Groq
 from dotenv import load_dotenv
 from app.models.resume import ParsedResume
 from langsmith import traceable
-from app.core.groq_utils import call_with_retry
+from app.core.groq_utils import invoke_with_exponential_backoff
 
 load_dotenv()
 client = Groq(api_key=os.getenv("GROQ_API_KEY"))
@@ -44,7 +44,7 @@ def parse_resume_text(raw_text: str, max_retries: int = 2) -> ParsedResume:
     last_error = None
     for attempt in range(max_retries + 1):
         try:
-            response = call_with_retry(lambda: client.chat.completions.create(
+            response = invoke_with_exponential_backoff(lambda: client.chat.completions.create(
                 model="openai/gpt-oss-120b",
                 messages=[
                     {"role": "system", "content": SYSTEM_PROMPT},
