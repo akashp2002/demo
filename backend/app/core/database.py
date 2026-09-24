@@ -13,6 +13,6 @@ AsyncSessionLocal = async_sessionmaker(engine, expire_on_commit=False, class_=As
 Base = declarative_base()
 
 
-async def get_db_session():
+async def get_db_sessions():
     async with AsyncSessionLocal() as session:
         yield session
