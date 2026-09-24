@@ -4,7 +4,7 @@ import re
 from groq import Groq
 from dotenv import load_dotenv
 from app.models.job import AnalyzedJob
-from app.core.groq_utils import call_with_retry
+from app.core.groq_utils import invoke_with_exponential_backoff
 from app.core.llm_client import get_structured_completion
 from langsmith import traceable
 
