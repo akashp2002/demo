@@ -2,7 +2,7 @@ import json
 from datetime import datetime, timedelta
 from sqlalchemy import select
 from app.agents.state import GraphState
-from app.core.llm_client import get_structured_completion
+from app.core.llm_client import get_structured_completions
 from app.core.database import AsyncSessionLocal
 from app.models.db_models import SearchTermCache
 
@@ -53,7 +53,7 @@ def expand_search_terms(role: str, candidate_skills: list[str]) -> list[str]:
     context = f"Requested role: {role}\nCandidate skills: {', '.join(candidate_skills[:15])}"
 
     try:
-        content = get_structured_completion(
+        content = get_structured_completions(
             system_prompt=SYSTEM_PROMPT,
             user_content=context,
             groq_model="openai/gpt-oss-20b",
