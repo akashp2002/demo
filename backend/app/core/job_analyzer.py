@@ -5,7 +5,7 @@ from groq import Groq
 from dotenv import load_dotenv
 from app.models.job import AnalyzedJob
 from app.core.groq_utils import invoke_with_exponential_backoff
-from app.core.llm_client import get_structured_completion
+from app.core.llm_client import get_structured_completions
 from langsmith import traceable
 
 load_dotenv()
@@ -57,7 +57,7 @@ def analyze_job_batch(raw_jobs: list[dict], max_retries: int = 2) -> list[Analyz
     last_error = None
     for attempt in range(max_retries + 1):
         try:
-            content = get_structured_completion(
+            content = get_structured_completions(
                 system_prompt=BATCH_SYSTEM_PROMPT,
                 user_content=json.dumps(batch_input),
                 groq_model="openai/gpt-oss-20b",

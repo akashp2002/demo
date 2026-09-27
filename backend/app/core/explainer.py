@@ -1,7 +1,7 @@
 import os
 from groq import Groq
 from dotenv import load_dotenv
-from app.core.llm_client import get_structured_completion
+from app.core.llm_client import get_structured_completions
 from langsmith import traceable
 
 
@@ -43,7 +43,7 @@ Score breakdown:
 - Seniority mismatch flagged: {breakdown.get('seniority_penalty_applied')}
 """
 
-    return get_structured_completion(
+    return get_structured_completions(
         system_prompt=SYSTEM_PROMPT,
         user_content=context,
         groq_model="openai/gpt-oss-20b",

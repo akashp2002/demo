@@ -19,7 +19,7 @@ def _is_daily_quota_error(error: Exception) -> bool:
     return "tokens per day" in msg or "TPD" in msg
 
 
-def get_structured_completion(
+def get_structured_completions(
     system_prompt: str,
     user_content: str,
     groq_model: str,
