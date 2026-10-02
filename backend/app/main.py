@@ -24,13 +24,13 @@ from app.core.security import get_current_user
 from app.models.db_models import User
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
-from app.core.database import get_db_sessions
+from app.core.database import get_db_session
 from app.core.parser import parse_resume_text
 from app.core.verifier import verify_resume
 from app.models.db_models import CandidateProfile
 from app.models.resume import ParsedResume, VerifiedResume
 from sqlalchemy import select
-from app.core.database import get_db_sessions, AsyncSession
+from app.core.database import get_db_session, AsyncSession
 from app.models.db_models import CandidateProfile
 from app.models.resume import JobSearchRequest
 from pydantic import BaseModel
@@ -86,7 +86,7 @@ async def health_check():
 
 @app.get("/api/profile/status")
 async def get_profile_status(
-    db: AsyncSession = Depends(get_db_sessions),
+    db: AsyncSession = Depends(get_db_session),
     current_user: User = Depends(get_current_user),
 ):
     profile = await db.scalar(
@@ -108,7 +108,7 @@ async def get_profile_status(
 async def upload_resume(
     request: Request,
     file: UploadFile = File(...),
-    db: AsyncSession = Depends(get_db_sessions),
+    db: AsyncSession = Depends(get_db_session),
     current_user: User = Depends(get_current_user),
 ):
     if file.content_type != "application/pdf":
@@ -179,7 +179,7 @@ NODE_LABELS = {
 async def start_job_search(
     request: Request,
     payload: JobSearchRequest, 
-    db: AsyncSession = Depends(get_db_sessions),
+    db: AsyncSession = Depends(get_db_session),
     current_user: User = Depends(get_current_user)
 ):
     # ── Guardrail: search input validation ──
@@ -239,7 +239,7 @@ class JobResumeRequest(BaseModel):
 async def start_job_search_stream(
     request: Request,
     payload: JobSearchRequest, 
-    db: AsyncSession = Depends(get_db_sessions),
+    db: AsyncSession = Depends(get_db_session),
     current_user: User = Depends(get_current_user)
 ):
     # ── Guardrail: search input validation ──
