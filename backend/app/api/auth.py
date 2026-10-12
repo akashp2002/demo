@@ -6,7 +6,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select
 from pydantic import BaseModel, EmailStr
 
-from app.core.database import get_db_session
+from app.core.database import get_db_sessions
 from app.models.db_models import User, CandidateProfile
 from app.core.security import (
     verify_password,
@@ -31,7 +31,7 @@ class Token(BaseModel):
 
 
 @router.post("/register", response_model=Token)
-async def register(user: UserCreate, db: AsyncSession = Depends(get_db_session)):
+async def register(user: UserCreate, db: AsyncSession = Depends(get_db_sessions)):
     # Check if user already exists
     result = await db.execute(select(User).where(User.email == user.email))
     if result.scalar_one_or_none():
@@ -67,7 +67,7 @@ async def register(user: UserCreate, db: AsyncSession = Depends(get_db_session))
 
 @router.post("/login", response_model=Token)
 @limiter.limit("5/minute")
-async def login(request: Request, form_data: OAuth2PasswordRequestForm = Depends(), db: AsyncSession = Depends(get_db_session)):
+async def login(request: Request, form_data: OAuth2PasswordRequestForm = Depends(), db: AsyncSession = Depends(get_db_sessions)):
     result = await db.execute(select(User).where(User.email == form_data.username))
     user = result.scalar_one_or_none()
     
